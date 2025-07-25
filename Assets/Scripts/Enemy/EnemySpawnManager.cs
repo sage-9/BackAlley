@@ -1,31 +1,51 @@
 using Managers;
 using UnityEngine;
 
+
+
 public class EnemySpawnManager : MonoBehaviour
 {
-    [SerializeField] private Transform[] spawnPoints = new Transform[2];
+    [SerializeField] private Transform leftSpawnPoint;
+    [SerializeField] private Transform rightSpawnPoint;
     [SerializeField] private GameObject enemy;
+    [SerializeField] private float enemySpawnRate;
 
-
-    void Start()
+    private Transform _currentSpawnPoint;
+    
+    void Awake()
     {
-        GameManager.OnGameStateChanged += StartSpawning;
-        GameManager.OnGameStateChanged += StopSpawning;
+        GameSceneManager.Play += StartSpawning;
+        GameSceneManager.Pause += StopSpawning;
+        GameSceneManager.GameOver += StopSpawning;
     }
 
-    void StartSpawning(GameState state)
+    private void OnDisable()
     {
-        if (state == GameState.Play) InvokeRepeating(nameof(Spawn), 0, 1);
+        GameSceneManager.Play -= StartSpawning;
+        GameSceneManager.Pause -= StopSpawning;
+        GameSceneManager.GameOver -= StopSpawning;
     }
 
-    void StopSpawning(GameState state)
+    void StartSpawning()
     {
-        if (state == GameState.GameOver) CancelInvoke(nameof(Spawn));
+        Debug.Log("StartSpawning");
+        InvokeRepeating(nameof(Spawn), 0, enemySpawnRate); 
+    }
+
+    void StopSpawning()
+    {
+        CancelInvoke(nameof(Spawn));
+    }
+
+    void Spawn()
+    {
+        bool result = Random.Range(0, 2) == 1;
+        Debug.Log($"the side picked was : {result}");
+        _currentSpawnPoint = result ?rightSpawnPoint:leftSpawnPoint;
+        Instantiate(enemy, _currentSpawnPoint.position, _currentSpawnPoint.rotation);
+
     }
     
-    public void Spawn()
-    {
-        int num = Random.Range(0,spawnPoints.Length);
-        Instantiate(enemy, spawnPoints[num].position, spawnPoints[num].rotation);
-    }
+    
 }
+

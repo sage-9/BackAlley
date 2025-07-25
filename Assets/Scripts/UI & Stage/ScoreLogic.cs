@@ -1,23 +1,26 @@
+using Player___Gun;
 using TMPro;
 using UnityEngine;
 
-
-public class ScoreLogic : MonoBehaviour
+namespace UI___Stage
 {
-    TMP_Text _scoreText;
-    int _score;
-
-    void Start()
+    public class ScoreLogic : MonoBehaviour
     {
-        _score = 0;
-        _scoreText = GetComponent<TMP_Text>();
-        Fire.AddScore+=UpdateScore;
+        TMP_Text _scoreText;
+        int _score;
+
+        void Start()
+        {
+            _score = 0;
+            _scoreText = GetComponent<TMP_Text>();
+            Fire.AddScore+=UpdateScore;
         
-    }
+        }
 
-    void UpdateScore()
-    {
-        _score += 5;
-        _scoreText.text = "Score : " + _score;
+        void UpdateScore()
+        {
+            _score += 5;
+            _scoreText.text = "Score : " + _score;
+        }
     }
 }

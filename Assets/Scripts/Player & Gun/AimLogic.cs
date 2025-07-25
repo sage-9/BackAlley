@@ -1,28 +1,30 @@
 using UnityEngine;
 
-public class AimLogic : MonoBehaviour
+namespace Player___Gun
 {
-    [Header("aim settings")]
-    [SerializeField] private float aimSensitivity;
-    
-    
-    float _horizontal, _vertical,_xRotation;
-    
-    [Header("Camera settings")]
-    [SerializeField] private Transform cameraTransform;
-    
-    void Start()
+    public class AimLogic : MonoBehaviour
     {
+        [Header("aim settings")]
+        [SerializeField] private float aimSensitivity;
+    
+    
+        float _horizontal, _vertical,_xRotation;
+    
+        [Header("Camera settings")]
+        [SerializeField] private Transform cameraTransform;
+    
+        void Start()
+        {
         
-        InputHandler.LookAction += CalculateInput;
+            InputHandler.LookAction += CalculateInput;
        
-    }
-    void Update()
-    {
-        RotateCamHolder();
-    }
+        }
+        void Update()
+        {
+            RotateCamHolder();
+        }
     
-    #region Camera Rotation Logic 
+        #region Camera Rotation Logic 
         void CalculateInput(Vector2 input)
         {
             _horizontal = input.x * aimSensitivity * Time.deltaTime;
@@ -38,7 +40,8 @@ public class AimLogic : MonoBehaviour
             // Horizontal player body rotation
             transform.Rotate(Vector3.up * _horizontal);
         }
-    #endregion
+        #endregion
 
    
+    }
 }

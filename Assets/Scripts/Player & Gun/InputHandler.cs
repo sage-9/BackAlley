@@ -1,34 +1,45 @@
 using System;
+using Managers;
 using UnityEngine;
 
-
-
-public class InputHandler : MonoBehaviour
+namespace Player___Gun
 {
-    public PlayerControls PlayerControls;
-    public static event Action<Vector2> LookAction;
-    public static event Action ShootAction;
-    public static event Action ReloadAction;
+    public class InputHandler : MonoBehaviour
+    {
+        public PlayerControls PlayerControls;
+        public static event Action<Vector2> LookAction;
+        public static event Action ShootAction;
+        public static event Action ReloadAction;
     
-    void Awake()
-    {
-        PlayerControls = new PlayerControls();
-        PlayerControls.Player.Look.performed += ctx => LookAction?.Invoke(ctx.ReadValue<Vector2>());
-        PlayerControls.Player.Look.canceled += ctx => LookAction?.Invoke(Vector2.zero);
-        PlayerControls.Player.Attack.performed+= ctx => ShootAction?.Invoke();
-        PlayerControls.Player.Reload.performed += ctx => ReloadAction?.Invoke();
-    }
+        void Awake()
+        {
+            PlayerControls = new PlayerControls();
+            PlayerControls.Player.Look.performed += ctx => LookAction?.Invoke(ctx.ReadValue<Vector2>());
+            PlayerControls.Player.Look.canceled += ctx => LookAction?.Invoke(Vector2.zero);
+            PlayerControls.Player.Attack.performed+= ctx => ShootAction?.Invoke();
+            PlayerControls.Player.Reload.performed += ctx => ReloadAction?.Invoke();
+            GameSceneManager.Play += ActivatePlayerControls;
+            GameSceneManager.Pause += DeactivatePlayerControls;
+            GameSceneManager.GameOver += DeactivatePlayerControls;
+        }
 
-    void OnEnable()
-    {
-        PlayerControls.Enable();
-        Cursor.visible = false; 
-        Cursor.lockState = CursorLockMode.Locked;
-    }
+        void OnDisable()
+        {
+            PlayerControls.Disable();
+            GameSceneManager.Play -= ActivatePlayerControls;
+            GameSceneManager.Pause -= DeactivatePlayerControls;
+            GameSceneManager.GameOver -= DeactivatePlayerControls;
+        }
 
-    void OnDisable()
-    {
-        PlayerControls.Disable();
-    }
+        void ActivatePlayerControls()
+        {
+            PlayerControls.Enable();
+        }
+
+        void DeactivatePlayerControls()
+        {
+            PlayerControls.Disable();
+        }
     
+    }
 }
