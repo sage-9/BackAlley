@@ -20,6 +20,13 @@ namespace UI___Stage
             GameSceneManager.Pause += StopTimer;
         }
 
+        void OnDisable()
+        {
+            GameSceneManager.PreStart -= StartTimer;
+            GameSceneManager.Play -= ResumeTimer;
+            GameSceneManager.Pause -= StopTimer;
+        }
+
         void Update()
         {
             if (_isRunning)

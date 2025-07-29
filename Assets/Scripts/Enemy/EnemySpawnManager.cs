@@ -1,6 +1,6 @@
 using Managers;
 using UnityEngine;
-
+using UnityEngine.Serialization;
 
 
 public class EnemySpawnManager : MonoBehaviour
@@ -8,7 +8,8 @@ public class EnemySpawnManager : MonoBehaviour
     [SerializeField] private Transform leftSpawnPoint;
     [SerializeField] private Transform rightSpawnPoint;
     [SerializeField] private GameObject enemy;
-    [SerializeField] private float enemySpawnRate;
+    [SerializeField]private float enemySpawnRate;
+    //[SerializeField] private float maxEnemySpawnTime, minEnemySpawnTime;
 
     private Transform _currentSpawnPoint;
     
@@ -28,8 +29,7 @@ public class EnemySpawnManager : MonoBehaviour
 
     void StartSpawning()
     {
-        Debug.Log("StartSpawning");
-        InvokeRepeating(nameof(Spawn), 0, enemySpawnRate); 
+        InvokeRepeating(nameof(Spawn), 0, enemySpawnRate);
     }
 
     void StopSpawning()

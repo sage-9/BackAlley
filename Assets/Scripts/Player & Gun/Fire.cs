@@ -11,11 +11,13 @@ namespace Player___Gun
         [SerializeField] int maxAmmo = 12;
         [SerializeField] float reloadTime;
         [SerializeField] float fireInterval;
+        [SerializeField] TMPro.TMP_Text ammoText;
     
         int _currentAmmo;
         bool _canFire = true;
         bool _isReloading;
         public static event Action AddScore; 
+        public static event Action AddBullets;
     
         [Header("Projectile Parameters")]
         [SerializeField] private float spreadAmount;
@@ -34,16 +36,23 @@ namespace Player___Gun
             _currentAmmo = maxAmmo;
         }
 
+        void OnDisable()
+        {
+            InputHandler.ShootAction -= Shoot;
+            InputHandler.ReloadAction -= Reload;
+        }
+
 
         void Shoot()
         {
             if (_currentAmmo <= 0) return;
             if(!_canFire) return;
             _currentAmmo--;
+            AddBullets?.Invoke();
             bool collided=Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit);
             HandleCollision(collided,hit);
             StartCoroutine(nameof(HandleFireInterval));
-            Debug.Log($"{_currentAmmo} remaining out of {maxAmmo}");
+            ammoText.text = _currentAmmo.ToString();
         }
         void HandleCollision(bool collided,RaycastHit hit)
         {
@@ -72,7 +81,7 @@ namespace Player___Gun
             {
                 Vector3 randomPositions = raycastHit.point + Random.insideUnitSphere * spreadAmount;
                 GameObject sparks=Instantiate(hitSpark, randomPositions, Quaternion.LookRotation(raycastHit.normal));
-                Destroy(sparks,5f);
+                Destroy(sparks,1f);
             }
             _rb.AddExplosionForce(forceAmount, raycastHit.point, spreadAmount);
         }
@@ -87,10 +96,10 @@ namespace Player___Gun
             if (_isReloading) yield break;
             if(_currentAmmo>=maxAmmo)yield break;
             _isReloading = true;
-            Debug.Log("Reloading");
+            ammoText.text = "Reloading";
             yield return new WaitForSeconds(reloadTime);
             _currentAmmo = maxAmmo;
-            Debug.Log("Bullets fully reloaded");
+            ammoText.text = _currentAmmo.ToString();
             _isReloading = false;
         }
     
