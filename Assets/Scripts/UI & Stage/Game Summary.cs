@@ -28,6 +28,13 @@ namespace UI___Stage
             GameSceneManager.GameOver += ActivateGameover;
         }
 
+        private void OnDisable()
+        {
+            ScoreLogic.Summary -= CalculateValues;
+            ScoreLogic.Summary -= AssignValues;
+            GameSceneManager.GameOver -= ActivateGameover;
+        }
+
         async void AssignValues(int num1,int num2)
         {
             await Task.Delay(1000);

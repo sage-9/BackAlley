@@ -55,14 +55,16 @@ namespace Player___Gun
 
             // Apply rotations using spherical linear interpolation (Slerp) for smooth movement
             // Horizontal rotation (Yaw) on the player body
-            transform.rotation = Quaternion.Slerp(
+            transform.rotation = Quaternion.Slerp
+            (
                 transform.rotation, 
                 Quaternion.Euler(0f, _targetYaw, 0f), 
                 smoothFactor
             );
 
             // Vertical rotation (Pitch) on the camera itself
-            cameraTransform.localRotation = Quaternion.Slerp(
+            cameraTransform.localRotation = Quaternion.Slerp
+            (
                 cameraTransform.localRotation, 
                 Quaternion.Euler(_targetPitch, 0f, 0f), 
                 smoothFactor

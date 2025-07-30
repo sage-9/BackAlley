@@ -46,6 +46,7 @@ namespace Player___Gun
         void Shoot()
         {
             if (_currentAmmo <= 0) return;
+            if(_isReloading) return;
             if(!_canFire) return;
             _currentAmmo--;
             AddBullets?.Invoke();
