@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using SFX;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -45,10 +46,15 @@ namespace Player___Gun
 
         void Shoot()
         {
-            if (_currentAmmo <= 0) return;
-            if(_isReloading) return;
             if(!_canFire) return;
+            if(_isReloading) return;
+            if (_currentAmmo <= 0)
+            {
+                SFXManager.Instance.PlaySound("GunClick");
+                return;
+            }
             _currentAmmo--;
+            SFXManager.Instance.PlaySound("Shoot");
             AddBullets?.Invoke();
             bool collided=Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit);
             HandleCollision(collided,hit);
@@ -90,6 +96,7 @@ namespace Player___Gun
         void Reload()
         {
             StartCoroutine(nameof(ReloadCoroutine));
+            SFXManager.Instance.PlaySound("Reload");
         }
 
         IEnumerator ReloadCoroutine()
